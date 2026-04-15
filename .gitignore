@@ -205,3 +205,24 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# ── TABBY MEME BANK ───────────────────────────────────────
+# NEVER commit .env files (contains private keys & API secrets!)
+.env
+backend/.env
+*.env
+
+# Python virtual environment
+backend/.venv/
+
+# Frontend build & node_modules
+frontend/node_modules/
+frontend/dist/
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db

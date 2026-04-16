@@ -1,16 +1,14 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
-import {
-  TrendingUp, FileText, ArrowDownLeft, ArrowUpRight, MessageCircle, Landmark
-} from 'lucide-react'
+import { TrendingUp, FileText, ArrowDownLeft, ArrowUpRight, MessageCircle, Landmark } from 'lucide-react'
 import { motion } from 'framer-motion'
 
-const NAV_ITEMS = [
-  { path: '/fund',     icon: TrendingUp,    label: 'MEME基金',  labelEn: 'Fund' },
-  { path: '/research', icon: FileText,       label: '投研报告',  labelEn: 'Research' },
-  { path: '/borrow',   icon: ArrowDownLeft,  label: '借贷',      labelEn: 'Borrow' },
-  { path: '/lend',     icon: ArrowUpRight,   label: '放贷',      labelEn: 'Lend' },
-  { path: '/chat',     icon: MessageCircle,  label: '客服',      labelEn: 'Chat' },
+const NAV = [
+  { path: '/fund',     icon: TrendingUp,   label: 'MEME基金' },
+  { path: '/research', icon: FileText,      label: '投研报告' },
+  { path: '/borrow',   icon: ArrowDownLeft, label: '借贷'     },
+  { path: '/lend',     icon: ArrowUpRight,  label: '放贷'     },
+  { path: '/chat',     icon: MessageCircle, label: '客服'     },
 ]
 
 export default function Header() {
@@ -18,53 +16,51 @@ export default function Header() {
   const { pathname } = useLocation()
 
   return (
-    <header className="sticky top-0 z-50 border-b border-bank-border bg-bank-bg/90 backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+    <header
+      className="sticky top-0 z-50 w-full"
+      style={{
+        background: 'rgba(10,10,10,0.8)',
+        borderBottom: '1px solid rgba(255,255,255,0.06)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+      }}
+    >
+      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-4">
 
         {/* Logo */}
-        <motion.div
-          className="flex items-center gap-2 cursor-pointer shrink-0"
+        <motion.button
           onClick={() => navigate('/')}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          className="flex items-center gap-2.5 shrink-0"
+          whileTap={{ scale: 0.97 }}
         >
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-tabby-500 to-sophia-purple
-                          flex items-center justify-center glow-orange">
-            <Landmark className="w-5 h-5 text-white" />
+          <div
+            className="sophia-avatar w-7 h-7 text-xs"
+            style={{ background: 'linear-gradient(135deg, #7c3aed, #4f46e5)' }}
+          >
+            <Landmark className="w-3.5 h-3.5" />
           </div>
-          <div>
-            <div className="font-display font-bold text-sm text-white leading-none">
-              TABBY MEME
-            </div>
-            <div className="font-display font-bold text-sm text-gradient leading-none">
-              BANK
-            </div>
-          </div>
-        </motion.div>
+          <span className="hidden sm:block text-sm font-semibold text-white tracking-tight">
+            TABBY MEME <span className="text-gradient">BANK</span>
+          </span>
+        </motion.button>
 
-        {/* Navigation */}
-        <nav className="flex items-center gap-1">
-          {NAV_ITEMS.map(({ path, icon: Icon, label }) => (
-            <motion.button
+        {/* Nav */}
+        <nav className="flex items-center gap-0.5">
+          {NAV.map(({ path, icon: Icon, label }) => (
+            <button
               key={path}
               onClick={() => navigate(path)}
-              className={`nav-item ${pathname === path ? 'active' : ''}`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              className={`nav-item text-xs ${pathname === path ? 'active' : ''}`}
             >
-              <Icon className="w-5 h-5" />
-              <span className="hidden sm:block">{label}</span>
-            </motion.button>
+              <Icon className="w-3.5 h-3.5" />
+              <span className="hidden md:block">{label}</span>
+            </button>
           ))}
         </nav>
 
-        {/* Wallet Connect */}
+        {/* Wallet */}
         <div className="shrink-0">
-          <ConnectButton
-            chainStatus="icon"
-            showBalance={false}
-            accountStatus="avatar"
-          />
+          <ConnectButton chainStatus="icon" showBalance={false} accountStatus="avatar" />
         </div>
       </div>
     </header>

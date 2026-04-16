@@ -1,5 +1,28 @@
 from pydantic_settings import BaseSettings
 from functools import lru_cache
+import pyodbc
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+def _detect_odbc_driver() -> str:
+    """Auto-detect the best available SQL Server ODBC driver."""
+    available = pyodbc.drivers()
+    # Prefer newest driver first
+    for preferred in [
+        "ODBC Driver 18 for SQL Server",
+        "ODBC Driver 17 for SQL Server",
+        "SQL Server Native Client 11.0",
+        "SQL Server",
+    ]:
+        if preferred in available:
+            logger.info(f"Using ODBC driver: {preferred}")
+            return preferred
+    raise RuntimeError(
+        f"No SQL Server ODBC driver found! Available drivers: {available}\n"
+        "Download from: https://learn.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server"
+    )
 
 
 class Settings(BaseSettings):
@@ -9,16 +32,17 @@ class Settings(BaseSettings):
     backend_url: str = "http://localhost:8000"
     cors_origins: str = "http://localhost:5173,http://localhost:3000"
 
-    # Anthropic
-    anthropic_api_key: str
-    anthropic_model: str = "claude-haiku-4-5-20251001"
-    humanize_model: str = "claude-sonnet-4-5"
-
-    # MSSQL
+    # MSSQL — driver auto-detected, or override via MSSQL_DRIVER in .env
     mssql_server: str
     mssql_database: str
     mssql_user: str
     mssql_password: str
+    mssql_driver: str = ""  # leave empty = auto-detect
+
+    # Anthropic
+    anthropic_api_key: str
+    anthropic_model: str = "claude-haiku-4-5-20251001"
+    humanize_model: str = "claude-sonnet-4-5"
 
     # BSC
     bsc_rpc_url: str
@@ -49,14 +73,27 @@ class Settings(BaseSettings):
         return [o.strip() for o in self.cors_origins.split(",")]
 
     @property
+    def resolved_odbc_driver(self) -> str:
+        """Return the configured driver, or auto-detect if not set."""
+        if self.mssql_driver:
+            return self.mssql_driver
+        return _detect_odbc_driver()
+
+    @property
     def mssql_connection_string(self) -> str:
-        return (
-            f"DRIVER={{ODBC Driver 17 for SQL Server}};"
-            f"SERVER={self.mssql_server};"
-            f"DATABASE={self.mssql_database};"
-            f"UID={self.mssql_user};"
-            f"PWD={self.mssql_password}"
-        )
+        driver = self.resolved_odbc_driver
+        parts = [
+            f"DRIVER={{{driver}}}",
+            f"SERVER={self.mssql_server}",
+            f"DATABASE={self.mssql_database}",
+            f"UID={self.mssql_user}",
+            f"PWD={self.mssql_password}",
+        ]
+        # Driver 18 enforces encryption by default; add TrustServerCertificate
+        # for self-signed certs (common on local SQLEXPRESS). Driver 17 is fine without it.
+        if "18" in driver:
+            parts += ["TrustServerCertificate=yes", "Encrypt=yes"]
+        return ";".join(parts)
 
     class Config:
         env_file = ".env"

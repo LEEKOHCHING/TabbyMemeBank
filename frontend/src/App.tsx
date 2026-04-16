@@ -11,7 +11,7 @@ import ChatPage from './pages/ChatPage'
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-bank-bg bg-grid flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ background: '#0d0d1a' }}>
       <Header />
       <main className="flex-1">
         <AnimatePresence mode="wait">

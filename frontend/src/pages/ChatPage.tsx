@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Send, RefreshCw, User } from 'lucide-react'
+import { Send, RefreshCw } from 'lucide-react'
 import { useAccount } from 'wagmi'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { useTranslation } from 'react-i18next'
@@ -13,26 +13,38 @@ function Bubble({ msg }: { msg: ChatMsg }) {
   return (
     <motion.div className={`flex gap-3 ${isUser ? 'flex-row-reverse' : ''}`}
       initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+
       {isUser ? (
-        <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
-             style={{ background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.2)' }}>
-          <User className="w-3.5 h-3.5 text-primary-400" />
+        <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-meme text-base"
+             style={{ background: 'linear-gradient(135deg,#ff2d78,#ff6b00)', boxShadow: '0 0 12px rgba(255,45,120,0.4)' }}>
+          👤
         </div>
       ) : (
-        <div className="sophia-avatar w-7 h-7 text-xs shrink-0">S</div>
+        <div className="sophia-avatar w-8 h-8 text-base shrink-0">🐱</div>
       )}
+
       <div className={`max-w-[78%] flex flex-col gap-1 ${isUser ? 'items-end' : ''}`}>
-        <span className="text-2xs text-ink-muted">{isUser ? t('chat.you') : t('live.president')}</span>
-        <div className="rounded-2xl px-4 py-2.5 text-sm leading-relaxed"
+        <span className="text-xs font-body font-semibold" style={{ color: '#6666aa' }}>
+          {isUser ? t('chat.you') : 'Sophia 🐱'}
+        </span>
+        <div className="rounded-2xl px-4 py-3 text-sm font-body leading-relaxed"
           style={isUser ? {
-            background: 'linear-gradient(135deg, #7c3aed, #6d28d9)', color: '#fff',
+            background: 'linear-gradient(135deg, #ff2d78, #ff6b00)',
+            color: '#fff',
             borderRadius: '16px 4px 16px 16px',
+            boxShadow: '0 0 16px rgba(255,45,120,0.3)',
           } : {
-            background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
-            color: '#e4e4e7', borderRadius: '4px 16px 16px 16px',
+            background: '#1a1a35',
+            border: '1px solid rgba(153,69,255,0.25)',
+            color: '#c8c8e8',
+            borderRadius: '4px 16px 16px 16px',
+            boxShadow: '0 0 12px rgba(153,69,255,0.1)',
           }}>
           {msg.content}
-          {msg.streaming && <span className="inline-block w-1.5 h-3.5 ml-1 rounded-sm bg-primary-400 animate-pulse" />}
+          {msg.streaming && (
+            <span className="inline-block w-1.5 h-4 ml-1 rounded-sm animate-pulse"
+                  style={{ background: '#9945ff', verticalAlign: 'middle' }} />
+          )}
         </div>
       </div>
     </motion.div>
@@ -84,49 +96,55 @@ export default function ChatPage() {
 
   if (!isConnected) return (
     <div className="mx-auto max-w-sm px-4 py-20 text-center">
-      <div className="sophia-avatar w-14 h-14 text-xl mx-auto mb-4 animate-float">S</div>
-      <h2 className="text-lg font-bold text-white mb-2">{t('chat.connect_title')}</h2>
-      <p className="text-sm text-ink-muted mb-6">{t('chat.connect_desc')}</p>
+      <div className="sophia-avatar w-20 h-20 text-4xl mx-auto mb-5 animate-float">🐱</div>
+      <h2 className="font-meme text-3xl text-white mb-2 tracking-wide">{t('chat.connect_title')}</h2>
+      <p className="text-sm font-body mb-6" style={{ color: '#6666aa' }}>{t('chat.connect_desc')}</p>
       <ConnectButton />
-      <button onClick={connect} className="btn-ghost mt-3 text-xs">{t('chat.skip_connect')}</button>
+      <button onClick={connect} className="btn-ghost mt-3 text-xs font-body w-full">{t('chat.skip_connect')}</button>
     </div>
   )
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-6 flex flex-col" style={{ height: 'calc(100vh - 56px)' }}>
-      <motion.div className="flex items-center gap-3 mb-4 rounded-xl px-4 py-3"
-        style={{ background: 'rgba(139,92,246,0.06)', border: '1px solid rgba(139,92,246,0.18)' }}
+
+      {/* Chat header */}
+      <motion.div className="flex items-center gap-3 mb-4 rounded-2xl px-4 py-3"
+        style={{ background: '#12122a', border: '2px solid rgba(153,69,255,0.3)', boxShadow: '0 0 20px rgba(153,69,255,0.1)' }}
         initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}>
-        <div className="sophia-avatar w-8 h-8 text-sm animate-float shrink-0">S</div>
+        <div className="sophia-avatar w-10 h-10 text-xl animate-float shrink-0">🐱</div>
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-white">{t('live.president')}</span>
-            <span className={`flex items-center gap-1 text-2xs font-medium ${online ? 'text-green-400' : 'text-ink-muted'}`}>
-              {online ? <><span className="live-dot" />{t('chat.online')}</> : t('chat.connecting')}
+            <span className="font-meme text-xl text-white tracking-wide">{t('live.president')}</span>
+            <span className={`flex items-center gap-1 text-xs font-body font-semibold ${online ? 'text-neon-green' : ''}`}
+                  style={!online ? { color: '#6666aa' } : {}}>
+              {online ? <><span className="live-dot" />{t('chat.online')}</> : `⏳ ${t('chat.connecting')}`}
             </span>
           </div>
-          <p className="text-2xs text-ink-muted">{t('chat.subtitle')}</p>
+          <p className="text-xs font-body" style={{ color: '#6666aa' }}>{t('chat.subtitle')}</p>
         </div>
         <button onClick={() => { wsRef.current?.close(); setTimeout(connect, 500) }}
-                className="btn-ghost text-xs flex items-center gap-1">
+                className="btn-ghost text-xs font-body flex items-center gap-1">
           <RefreshCw className="w-3 h-3" /> {t('chat.reconnect')}
         </button>
       </motion.div>
 
+      {/* Messages */}
       <div className="flex-1 overflow-y-auto space-y-4 pb-2 pr-1">
         {msgs.length === 0 && (
           <div className="flex flex-col items-center py-10 gap-5">
-            <div className="sophia-avatar w-12 h-12 text-lg animate-float">S</div>
-            <p className="text-sm text-ink-muted">{t('chat.waiting')}</p>
+            <div className="sophia-avatar w-16 h-16 text-3xl animate-float">🐱</div>
+            <p className="font-meme text-xl text-white tracking-wide">MEOW! ASK ME ANYTHING 🚀</p>
+            <p className="text-sm font-body" style={{ color: '#6666aa' }}>{t('chat.waiting')}</p>
             <div className="flex flex-wrap gap-2 justify-center">
               {quickQ.map((q, i) => (
-                <button key={i} onClick={() => send(q)}
-                  className="rounded-full px-3 py-1.5 text-xs text-ink-secondary transition-all"
-                  style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
-                  onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(139,92,246,0.4)')}
-                  onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)')}>
+                <motion.button key={i} onClick={() => send(q)}
+                  className="rounded-full px-4 py-2 text-xs font-body font-semibold transition-all"
+                  style={{ background: 'rgba(153,69,255,0.1)', border: '1px solid rgba(153,69,255,0.3)', color: '#bb77ff' }}
+                  whileHover={{ scale: 1.05, boxShadow: '0 0 12px rgba(153,69,255,0.3)' }}
+                  onMouseEnter={e => (e.currentTarget.style.borderColor = '#9945ff')}
+                  onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(153,69,255,0.3)')}>
                   {q}
-                </button>
+                </motion.button>
               ))}
             </div>
           </div>
@@ -137,21 +155,33 @@ export default function ChatPage() {
         <div ref={bottomRef} />
       </div>
 
-      <div className="mt-3 rounded-xl px-4 py-3"
-           style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+      {/* Input area */}
+      <div className="mt-3 rounded-2xl px-4 py-3"
+           style={{ background: '#12122a', border: '2px solid rgba(153,69,255,0.25)', boxShadow: '0 0 16px rgba(153,69,255,0.08)' }}>
         <div className="flex gap-3 items-end">
-          <textarea className="flex-1 bg-transparent text-sm text-white placeholder-zinc-600 resize-none outline-none"
-            placeholder={t('chat.placeholder')} rows={2} value={input}
+          <textarea
+            className="flex-1 bg-transparent text-sm font-body text-white resize-none outline-none"
+            style={{ caretColor: '#9945ff' }}
+            placeholder={t('chat.placeholder')}
+            rows={2}
+            value={input}
             onChange={e => setInput(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(input) } }} />
-          <button onClick={() => send(input)} disabled={!input.trim() || !online}
-                  className="btn-primary w-9 h-9 p-0 rounded-lg shrink-0">
-            <Send className="w-4 h-4" />
-          </button>
+            onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(input) } }}
+          />
+          <motion.button
+            onClick={() => send(input)}
+            disabled={!input.trim() || !online}
+            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 disabled:opacity-40"
+            style={{ background: 'linear-gradient(135deg,#9945ff,#00ff88)', boxShadow: '0 0 16px rgba(153,69,255,0.4)' }}
+            whileHover={{ scale: 1.08, boxShadow: '0 0 24px rgba(0,255,136,0.4)' }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Send className="w-4 h-4 text-black" />
+          </motion.button>
         </div>
-        <div className="flex justify-between mt-2 pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-          <span className="text-2xs text-ink-muted">{t('chat.enter_hint')}</span>
-          <span className="text-2xs text-ink-muted">{t('chat.powered_by')}</span>
+        <div className="flex justify-between mt-2 pt-2" style={{ borderTop: '1px solid rgba(153,69,255,0.1)' }}>
+          <span className="text-xs font-body" style={{ color: '#4a4a6a' }}>{t('chat.enter_hint')}</span>
+          <span className="text-xs font-body" style={{ color: '#4a4a6a' }}>🤖 {t('chat.powered_by')}</span>
         </div>
       </div>
     </div>

@@ -1,0 +1,207 @@
+export default {
+  // ── Nav ──────────────────────────────────────────
+  nav: {
+    fund:     'MEME基金',
+    research: '投研报告',
+    borrow:   '借贷',
+    lend:     '放贷',
+    chat:     '客服',
+  },
+
+  // ── Home ─────────────────────────────────────────
+  home: {
+    badge:    'BSC 主网运行中',
+    title1:   'TABBY ',
+    title2:   'MEME BANK',
+    subtitle: '由 AI 行长 Sophia 管理的 BSC 链上 Meme 代币投资与 P2P 借贷平台',
+    cta_invest: '开始投资',
+    cta_chat:   '咨询 Sophia',
+    section_stats:   '基金实时数据',
+    section_live:    'Sophia 行长实时动态',
+    section_actions: '快速操作',
+    risk_title: '风险提示',
+    risk_text:  'Meme 代币具有极高投机风险，价格波动剧烈，投资可能损失全部本金。请理性投资，只投入您能承受损失的资金。',
+    actions: {
+      fund:     { label: '投资 MEME 基金',  desc: '让 Sophia 行长为您操盘 BSC Meme 代币' },
+      research: { label: '查看投研报告',    desc: 'Sophia 行长 AI 深度分析报告' },
+      borrow:   { label: '抵押借贷',        desc: '抵押 Meme 代币，借出 BNB 资金' },
+      lend:     { label: '放贷获益',        desc: '选择优质订单，赚取利息收益' },
+      chat:     { label: '咨询 Sophia',     desc: '直接与 AI 行长对话' },
+    },
+    enter: '进入',
+  },
+
+  // ── Dashboard ────────────────────────────────────
+  stats: {
+    total_invested:   '总投资规模',
+    portfolio_value:  '组合市值',
+    profit_loss:      '累计盈亏',
+    cash_available:   '可用现金',
+    investors:        '投资人数',
+    strategy_manager: '策略执行人',
+    live_trading:     '实时操盘中',
+  },
+
+  // ── Sophia Live ──────────────────────────────────
+  live: {
+    president:   'Sophia 行长',
+    subtitle:    'AI 行长实时操盘动态',
+    bsc_mainnet: 'BSC 主网',
+    thinking:    'Sophia 行长正在思考中…',
+    auto_update: '每 15 秒自动更新',
+    guardian:    '守护您的每一笔资金',
+    token_label: '代币',
+  },
+
+  // ── Fund Page ─────────────────────────────────────
+  fund: {
+    title:       'TABBY MEME 基金',
+    subtitle:    '由 Sophia 行长主动管理的 BSC Meme 代币基金',
+    aum:         '管理规模',
+    nav_value:   '组合市值',
+    pnl:         '累计盈亏',
+    investors:   '投资人数',
+    holdings:    'Sophia 当前持仓',
+    cash:        'BNB（现金）',
+    view_bscscan:'BSCScan 查看钱包',
+    trade_log:   'Sophia 操盘记录',
+    no_trades:   '暂无交易记录',
+    my_invest:   '我的投资',
+    invest_records: '笔记录',
+    invest_form: '投资基金',
+    invest_notice: '请先将 BNB 转入 Sophia 行长钱包：',
+    amount_label: '投资金额（BNB）',
+    txhash_label: '转账 TX Hash',
+    confirm_btn:  '确认投资',
+    confirming:   '确认中…',
+    connect_title: '连接钱包以投资',
+    connect_desc:  '加入 TABBY MEME 基金，让 Sophia 为您操盘',
+    risk_note:     'Meme 代币价格波动极大，投资可能损失全部本金。',
+    tx_types: {
+      buy:              '买入',
+      sell:             '卖出',
+      add_liquidity:    '加池',
+      remove_liquidity: '撤池',
+    },
+  },
+
+  // ── Research ─────────────────────────────────────
+  research: {
+    title:    '投研报告',
+    subtitle: '由 Sophia 行长发布的 Meme 代币深度分析报告',
+    empty:    'Sophia 行长正在撰写第一份投研报告…',
+    rec: {
+      BUY:   '建议买入',
+      SELL:  '建议卖出',
+      HOLD:  '建议持有',
+      WATCH: '观望',
+    },
+    risk:       '风险',
+    confidence: '置信度',
+    expand:     '查看完整报告',
+    collapse:   '收起报告',
+  },
+
+  // ── Lending ──────────────────────────────────────
+  borrow: {
+    title:    'Meme 代币抵押借贷',
+    subtitle: '抵押 Meme 代币，借出 BNB 资金（P2P）',
+    connect_title: '连接钱包以借贷',
+    form_title:    '提交借贷申请',
+    notice:        '请先将抵押代币转入 Sophia 行长钱包，再填写以下信息。',
+    token_symbol:  '代币符号',
+    collateral_amount: '抵押数量',
+    contract_addr: '代币合约地址',
+    loan_amount:   '借款金额（BNB）',
+    interest_rate: '年化利率（%）',
+    duration:      '借贷期限',
+    days:          '天',
+    tx_hash:       '抵押转账 TX Hash',
+    submit_btn:    '提交借贷申请',
+    submitting:    '提交中…',
+    my_loans:      '我的借贷',
+    no_loans:      '暂无借贷记录',
+    labels: { borrow: '借款', repay: '还款', due: '到期日', rate: '利率' },
+  },
+
+  // ── Lend ─────────────────────────────────────────
+  lend: {
+    title:    '放贷获益',
+    subtitle: '选择优质抵押订单，放出 BNB 赚取利息（P2P）',
+    connect_title: '连接钱包以放贷',
+    open_requests: '开放申请',
+    no_requests:   '暂无开放借贷申请',
+    lend_btn:      '放贷',
+    my_lending:    '我的放贷',
+    no_lending:    '暂无放贷记录',
+    click_hint:    '点击左边申请单开始放贷',
+    modal: {
+      title:      '确认放贷',
+      collateral: '抵押代币',
+      amount:     '抵押数量',
+      loan:       '借款金额',
+      duration:   '期限',
+      rate_label: '调整利率（%）',
+      tx_label:   '放贷 TX Hash',
+      expected:   '预计回收',
+      cancel:     '取消',
+      confirm:    '确认放贷',
+      processing: '处理中…',
+    },
+    labels: { out: '放出', return: '回收', due: '到期日', collateral: '抵押', borrower: '借款人', rate: '利率', duration: '期限' },
+  },
+
+  // ── Chat ─────────────────────────────────────────
+  chat: {
+    title:     '咨询 Sophia 行长',
+    subtitle:  'TABBY MEME BANK · AI 行长 · BSC Meme 投资顾问',
+    online:    '在线',
+    connecting:'连接中…',
+    waiting:   'Sophia 行长等候您的提问…',
+    you:       '你',
+    placeholder: '输入问题，按 Enter 发送…',
+    enter_hint:  'Enter 发送 · Shift+Enter 换行',
+    powered_by:  'Powered by Claude AI',
+    reconnect:   '重连',
+    connect_title: '咨询 Sophia 行长',
+    connect_desc:  '连接钱包以获得个性化投资建议',
+    skip_connect:  '不连接，直接聊天',
+    quick: [
+      '目前 TABBY MEME 基金表现如何？',
+      'BSC 链上有哪些值得关注的 Meme 代币？',
+      '如何抵押 Meme 代币借贷？',
+      'Sophia 行长的投资策略是什么？',
+      'PEPE 代币现在值得买吗？',
+    ],
+  },
+
+  // ── Footer ────────────────────────────────────────
+  footer: {
+    tagline:  '由 AI 行长 Sophia 管理的 BSC 链上 Meme 代币投资与 P2P 借贷平台。',
+    features: '功能',
+    chain:    '链上信息',
+    feature_list: [
+      'TABBY MEME 基金投资',
+      'Meme 代币 P2P 借贷',
+      'AI 投研报告',
+      'Sophia 行长客服',
+    ],
+    bsc_mainnet:    'BSC 主网（Chain ID: 56）',
+    tabby_contract: 'TABBY 合约',
+    copyright:      '© 2026 TABBY MEME BANK · 投资有风险，入市需谨慎。',
+    powered:        'Powered by',
+  },
+
+  // ── Common ────────────────────────────────────────
+  common: {
+    connect_wallet: '连接钱包',
+    enter:    '进入',
+    loading:  '加载中…',
+    no_data:  '暂无数据',
+    risk_warning: '风险提示',
+    view:     '查看',
+    days:     '天',
+    annual_rate: '年化利率',
+    borrower: '借款人',
+  },
+} as const

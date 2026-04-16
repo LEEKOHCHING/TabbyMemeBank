@@ -1,0 +1,207 @@
+export default {
+  // ── Nav ──────────────────────────────────────────
+  nav: {
+    fund:     'MEME Fund',
+    research: 'Research',
+    borrow:   'Borrow',
+    lend:     'Lend',
+    chat:     'Support',
+  },
+
+  // ── Home ─────────────────────────────────────────
+  home: {
+    badge:    'BSC Mainnet Live',
+    title1:   'TABBY ',
+    title2:   'MEME BANK',
+    subtitle: 'BSC-chain Meme token investment & P2P lending platform managed by AI President',
+    cta_invest: 'Start Investing',
+    cta_chat:   'Ask Sophia',
+    section_stats:    'Fund Live Data',
+    section_live:     'Sophia Live Feed',
+    section_actions:  'Quick Actions',
+    risk_title:       'Risk Warning',
+    risk_text:        'Meme tokens are highly speculative. Prices are extremely volatile and you may lose your entire investment. Invest responsibly and only with funds you can afford to lose.',
+    actions: {
+      fund:     { label: 'Invest in MEME Fund',  desc: 'Let Sophia manage your BSC Meme portfolio' },
+      research: { label: 'Research Reports',      desc: 'AI-powered deep analysis by Sophia' },
+      borrow:   { label: 'Collateral Borrow',     desc: 'Pledge Meme tokens, borrow BNB' },
+      lend:     { label: 'Lend & Earn',           desc: 'Fund quality orders, earn interest' },
+      chat:     { label: 'Ask Sophia',            desc: 'Chat directly with the AI President' },
+    },
+    enter: 'Enter',
+  },
+
+  // ── Dashboard ────────────────────────────────────
+  stats: {
+    total_invested:    'Total Invested',
+    portfolio_value:   'Portfolio Value',
+    profit_loss:       'Profit / Loss',
+    cash_available:    'Cash Available',
+    investors:         'Investors',
+    strategy_manager:  'Strategy Manager',
+    live_trading:      'Live Trading',
+  },
+
+  // ── Sophia Live ──────────────────────────────────
+  live: {
+    president:   'President Sophia',
+    subtitle:    'AI President live activity feed',
+    bsc_mainnet: 'BSC Mainnet',
+    thinking:    'Sophia is thinking…',
+    auto_update: 'Auto-updates every 15s',
+    guardian:    'Guarding your every investment',
+    token_label: 'Token',
+  },
+
+  // ── Fund Page ─────────────────────────────────────
+  fund: {
+    title:       'TABBY MEME Fund',
+    subtitle:    'Actively managed BSC Meme token fund by Sophia',
+    aum:         'AUM',
+    nav_value:   'Portfolio Value',
+    pnl:         'Total P&L',
+    investors:   'Investors',
+    holdings:    'Current Holdings',
+    cash:        'BNB (Cash)',
+    view_bscscan:'View wallet on BSCScan',
+    trade_log:   'Sophia Trading Log',
+    no_trades:   'No trading records yet',
+    my_invest:   'My Investment',
+    invest_records: 'transactions',
+    invest_form: 'Invest in Fund',
+    invest_notice: 'Please transfer BNB to Sophia\'s wallet first:',
+    amount_label: 'Amount (BNB)',
+    txhash_label: 'Transfer TX Hash',
+    confirm_btn:  'Confirm Investment',
+    confirming:   'Confirming…',
+    connect_title: 'Connect Wallet to Invest',
+    connect_desc:  'Join the TABBY MEME Fund and let Sophia trade for you',
+    risk_note:     'Meme token prices are extremely volatile. Investment may result in total loss.',
+    tx_types: {
+      buy:              'Buy',
+      sell:             'Sell',
+      add_liquidity:    'Add LP',
+      remove_liquidity: 'Remove LP',
+    },
+  },
+
+  // ── Research ─────────────────────────────────────
+  research: {
+    title:    'Research Reports',
+    subtitle: 'Deep-dive Meme token analysis published by President Sophia',
+    empty:    'Sophia is writing the first research report…',
+    rec: {
+      BUY:   'Buy',
+      SELL:  'Sell',
+      HOLD:  'Hold',
+      WATCH: 'Watch',
+    },
+    risk:       'Risk',
+    confidence: 'Confidence',
+    expand:     'View Full Report',
+    collapse:   'Collapse',
+  },
+
+  // ── Lending ──────────────────────────────────────
+  borrow: {
+    title:    'Meme Collateral Borrowing',
+    subtitle: 'Pledge your Meme tokens, borrow BNB (P2P)',
+    connect_title: 'Connect Wallet to Borrow',
+    form_title:    'Submit Loan Request',
+    notice:        'Please transfer collateral tokens to Sophia\'s wallet first, then fill in the form below.',
+    token_symbol:  'Token Symbol',
+    collateral_amount: 'Collateral Amount',
+    contract_addr: 'Token Contract Address',
+    loan_amount:   'Loan Amount (BNB)',
+    interest_rate: 'Annual Interest Rate (%)',
+    duration:      'Loan Duration',
+    days:          'days',
+    tx_hash:       'Collateral TX Hash',
+    submit_btn:    'Submit Loan Request',
+    submitting:    'Submitting…',
+    my_loans:      'My Loans',
+    no_loans:      'No loan records yet',
+    labels: { borrow: 'Borrowed', repay: 'Repayment', due: 'Due Date', rate: 'Rate' },
+  },
+
+  // ── Lend ─────────────────────────────────────────
+  lend: {
+    title:    'Lend & Earn',
+    subtitle: 'Fund quality collateral orders, earn BNB interest (P2P)',
+    connect_title: 'Connect Wallet to Lend',
+    open_requests: 'Open Requests',
+    no_requests:   'No open loan requests',
+    lend_btn:      'Lend',
+    my_lending:    'My Lending',
+    no_lending:    'No lending records yet',
+    click_hint:    'Click a request on the left to start',
+    modal: {
+      title:      'Confirm Lending',
+      collateral: 'Collateral Token',
+      amount:     'Collateral Amount',
+      loan:       'Loan Amount',
+      duration:   'Duration',
+      rate_label: 'Adjust Rate (%)',
+      tx_label:   'Payment TX Hash',
+      expected:   'Expected Return',
+      cancel:     'Cancel',
+      confirm:    'Confirm',
+      processing: 'Processing…',
+    },
+    labels: { out: 'Lent', return: 'Return', due: 'Due Date', collateral: 'Collateral', borrower: 'Borrower', rate: 'Rate', duration: 'Duration' },
+  },
+
+  // ── Chat ─────────────────────────────────────────
+  chat: {
+    title:     'Ask President Sophia',
+    subtitle:  'TABBY MEME BANK · AI President · BSC Meme Advisor',
+    online:    'Online',
+    connecting:'Connecting…',
+    waiting:   'Sophia is waiting for your question…',
+    you:       'You',
+    placeholder: 'Type a question, press Enter to send…',
+    enter_hint:  'Enter to send · Shift+Enter for new line',
+    powered_by:  'Powered by Claude AI',
+    reconnect:   'Reconnect',
+    connect_title: 'Ask President Sophia',
+    connect_desc:  'Connect your wallet for personalised advice',
+    skip_connect:  'Skip, chat directly',
+    quick: [
+      'How is the TABBY MEME Fund performing?',
+      'Which BSC Meme tokens should I watch?',
+      'How does collateral borrowing work?',
+      "What is Sophia's investment strategy?",
+      'Is PEPE worth buying now?',
+    ],
+  },
+
+  // ── Footer ────────────────────────────────────────
+  footer: {
+    tagline:  'BSC-chain Meme token investment & P2P lending platform managed by AI President Sophia.',
+    features: 'Features',
+    chain:    'On-Chain Info',
+    feature_list: [
+      'TABBY MEME Fund Investment',
+      'Meme Token P2P Lending',
+      'AI Research Reports',
+      'Sophia President Support',
+    ],
+    bsc_mainnet:    'BSC Mainnet (Chain ID: 56)',
+    tabby_contract: 'TABBY Contract',
+    copyright:      '© 2026 TABBY MEME BANK · Invest wisely, risk responsibly.',
+    powered:        'Powered by',
+  },
+
+  // ── Common ────────────────────────────────────────
+  common: {
+    connect_wallet: 'Connect Wallet',
+    enter:    'Enter',
+    loading:  'Loading…',
+    no_data:  'No data',
+    risk_warning: 'Risk Warning',
+    view:     'View',
+    days:     'days',
+    annual_rate: 'APR',
+    borrower: 'Borrower',
+  },
+} as const

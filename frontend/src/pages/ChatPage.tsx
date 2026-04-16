@@ -3,27 +3,16 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Send, RefreshCw, User } from 'lucide-react'
 import { useAccount } from 'wagmi'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { useTranslation } from 'react-i18next'
 
-interface ChatMsg {
-  id: string; role: 'user' | 'sophia'; content: string; streaming?: boolean
-}
-
-const QUICK_Q = [
-  '目前 TABBY MEME 基金表现如何？',
-  'BSC 链上有哪些值得关注的 Meme 代币？',
-  '如何抵押 Meme 代币借贷？',
-  'Sophia 行长的投资策略是什么？',
-  'PEPE 代币现在值得买吗？',
-]
+interface ChatMsg { id: string; role: 'user' | 'sophia'; content: string; streaming?: boolean }
 
 function Bubble({ msg }: { msg: ChatMsg }) {
+  const { t } = useTranslation()
   const isUser = msg.role === 'user'
   return (
-    <motion.div
-      className={`flex gap-3 ${isUser ? 'flex-row-reverse' : ''}`}
-      initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-    >
-      {/* Avatar */}
+    <motion.div className={`flex gap-3 ${isUser ? 'flex-row-reverse' : ''}`}
+      initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
       {isUser ? (
         <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
              style={{ background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.2)' }}>
@@ -32,26 +21,18 @@ function Bubble({ msg }: { msg: ChatMsg }) {
       ) : (
         <div className="sophia-avatar w-7 h-7 text-xs shrink-0">S</div>
       )}
-
       <div className={`max-w-[78%] flex flex-col gap-1 ${isUser ? 'items-end' : ''}`}>
-        <span className="text-2xs text-ink-muted">{isUser ? '你' : 'Sophia 行长'}</span>
-        <div
-          className="rounded-2xl px-4 py-2.5 text-sm leading-relaxed"
+        <span className="text-2xs text-ink-muted">{isUser ? t('chat.you') : t('live.president')}</span>
+        <div className="rounded-2xl px-4 py-2.5 text-sm leading-relaxed"
           style={isUser ? {
-            background: 'linear-gradient(135deg, #7c3aed, #6d28d9)',
-            color: '#fff',
+            background: 'linear-gradient(135deg, #7c3aed, #6d28d9)', color: '#fff',
             borderRadius: '16px 4px 16px 16px',
           } : {
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(255,255,255,0.08)',
-            color: '#e4e4e7',
-            borderRadius: '4px 16px 16px 16px',
-          }}
-        >
+            background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+            color: '#e4e4e7', borderRadius: '4px 16px 16px 16px',
+          }}>
           {msg.content}
-          {msg.streaming && (
-            <span className="inline-block w-1.5 h-3.5 ml-1 rounded-sm bg-primary-400 animate-pulse" />
-          )}
+          {msg.streaming && <span className="inline-block w-1.5 h-3.5 ml-1 rounded-sm bg-primary-400 animate-pulse" />}
         </div>
       </div>
     </motion.div>
@@ -60,12 +41,13 @@ function Bubble({ msg }: { msg: ChatMsg }) {
 
 export default function ChatPage() {
   const { address, isConnected } = useAccount()
-  const [msgs, setMsgs]       = useState<ChatMsg[]>([])
-  const [input, setInput]     = useState('')
-  const [online, setOnline]   = useState(false)
-  const [sessionId]           = useState(() => `s-${Date.now()}-${Math.random().toString(36).slice(2)}`)
-  const wsRef                 = useRef<WebSocket | null>(null)
-  const bottomRef             = useRef<HTMLDivElement>(null)
+  const { t } = useTranslation()
+  const [msgs, setMsgs]     = useState<ChatMsg[]>([])
+  const [input, setInput]   = useState('')
+  const [online, setOnline] = useState(false)
+  const [sessionId]         = useState(() => `s-${Date.now()}-${Math.random().toString(36).slice(2)}`)
+  const wsRef               = useRef<WebSocket | null>(null)
+  const bottomRef           = useRef<HTMLDivElement>(null)
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [msgs])
 
@@ -83,7 +65,7 @@ export default function ChatPage() {
       else if (d.type === 'start')
         setMsgs(p => [...p, { id: `st-${Date.now()}`, role: 'sophia', content: '', streaming: true }])
       else if (d.type === 'chunk')
-        setMsgs(p => { const l = p[p.length-1]; return l?.streaming ? [...p.slice(0,-1), {...l, content: l.content + d.content}] : p })
+        setMsgs(p => { const l = p[p.length-1]; return l?.streaming ? [...p.slice(0,-1), {...l, content: l.content+d.content}] : p })
       else if (d.type === 'end')
         setMsgs(p => { const l = p[p.length-1]; return l?.streaming ? [...p.slice(0,-1), {...l, streaming: false}] : p })
     }
@@ -98,52 +80,47 @@ export default function ChatPage() {
     setInput('')
   }
 
-  if (!isConnected) {
-    return (
-      <div className="mx-auto max-w-sm px-4 py-20 text-center">
-        <div className="sophia-avatar w-14 h-14 text-xl mx-auto mb-4 animate-float">S</div>
-        <h2 className="text-lg font-bold text-white mb-2">咨询 Sophia 行长</h2>
-        <p className="text-sm text-ink-muted mb-6">连接钱包以获得个性化投资建议</p>
-        <ConnectButton />
-        <button onClick={connect} className="btn-ghost mt-3 text-xs">不连接，直接聊天</button>
-      </div>
-    )
-  }
+  const quickQ = t('chat.quick', { returnObjects: true }) as string[]
+
+  if (!isConnected) return (
+    <div className="mx-auto max-w-sm px-4 py-20 text-center">
+      <div className="sophia-avatar w-14 h-14 text-xl mx-auto mb-4 animate-float">S</div>
+      <h2 className="text-lg font-bold text-white mb-2">{t('chat.connect_title')}</h2>
+      <p className="text-sm text-ink-muted mb-6">{t('chat.connect_desc')}</p>
+      <ConnectButton />
+      <button onClick={connect} className="btn-ghost mt-3 text-xs">{t('chat.skip_connect')}</button>
+    </div>
+  )
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-6 flex flex-col" style={{ height: 'calc(100vh - 56px)' }}>
-
-      {/* Header */}
-      <motion.div
-        className="flex items-center gap-3 mb-4 rounded-xl px-4 py-3"
+      <motion.div className="flex items-center gap-3 mb-4 rounded-xl px-4 py-3"
         style={{ background: 'rgba(139,92,246,0.06)', border: '1px solid rgba(139,92,246,0.18)' }}
-        initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
-      >
+        initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}>
         <div className="sophia-avatar w-8 h-8 text-sm animate-float shrink-0">S</div>
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-white">Sophia 行长</span>
+            <span className="text-sm font-semibold text-white">{t('live.president')}</span>
             <span className={`flex items-center gap-1 text-2xs font-medium ${online ? 'text-green-400' : 'text-ink-muted'}`}>
-              {online ? <><span className="live-dot" />在线</> : '连接中…'}
+              {online ? <><span className="live-dot" />{t('chat.online')}</> : t('chat.connecting')}
             </span>
           </div>
-          <p className="text-2xs text-ink-muted">TABBY MEME BANK · AI 行长 · BSC Meme 投资顾问</p>
+          <p className="text-2xs text-ink-muted">{t('chat.subtitle')}</p>
         </div>
         <button onClick={() => { wsRef.current?.close(); setTimeout(connect, 500) }}
                 className="btn-ghost text-xs flex items-center gap-1">
-          <RefreshCw className="w-3 h-3" />
+          <RefreshCw className="w-3 h-3" /> {t('chat.reconnect')}
         </button>
       </motion.div>
 
-      {/* Messages */}
       <div className="flex-1 overflow-y-auto space-y-4 pb-2 pr-1">
         {msgs.length === 0 && (
           <div className="flex flex-col items-center py-10 gap-5">
             <div className="sophia-avatar w-12 h-12 text-lg animate-float">S</div>
-            <p className="text-sm text-ink-muted">Sophia 行长等候您的提问…</p>
+            <p className="text-sm text-ink-muted">{t('chat.waiting')}</p>
             <div className="flex flex-wrap gap-2 justify-center">
-              {QUICK_Q.map(q => (
-                <button key={q} onClick={() => send(q)}
+              {quickQ.map((q, i) => (
+                <button key={i} onClick={() => send(q)}
                   className="rounded-full px-3 py-1.5 text-xs text-ink-secondary transition-all"
                   style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
                   onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(139,92,246,0.4)')}
@@ -160,26 +137,21 @@ export default function ChatPage() {
         <div ref={bottomRef} />
       </div>
 
-      {/* Input */}
       <div className="mt-3 rounded-xl px-4 py-3"
            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
         <div className="flex gap-3 items-end">
-          <textarea
-            className="flex-1 bg-transparent text-sm text-white placeholder-zinc-600 resize-none outline-none"
-            placeholder="输入问题，按 Enter 发送…"
-            rows={2}
-            value={input}
+          <textarea className="flex-1 bg-transparent text-sm text-white placeholder-zinc-600 resize-none outline-none"
+            placeholder={t('chat.placeholder')} rows={2} value={input}
             onChange={e => setInput(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(input) } }}
-          />
+            onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(input) } }} />
           <button onClick={() => send(input)} disabled={!input.trim() || !online}
                   className="btn-primary w-9 h-9 p-0 rounded-lg shrink-0">
             <Send className="w-4 h-4" />
           </button>
         </div>
         <div className="flex justify-between mt-2 pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-          <span className="text-2xs text-ink-muted">Enter 发送 · Shift+Enter 换行</span>
-          <span className="text-2xs text-ink-muted">Powered by Claude AI</span>
+          <span className="text-2xs text-ink-muted">{t('chat.enter_hint')}</span>
+          <span className="text-2xs text-ink-muted">{t('chat.powered_by')}</span>
         </div>
       </div>
     </div>

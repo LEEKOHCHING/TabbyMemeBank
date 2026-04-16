@@ -5,78 +5,104 @@ export default {
   theme: {
     extend: {
       colors: {
-        meme: {
-          bg:       '#0d0d1a',   // dark navy
-          surface:  '#12122a',
-          card:     '#1a1a35',
-          border:   '#2a2a55',
+        // Bolt.new-inspired dark palette
+        bolt: {
+          bg:       '#0a0a0a',   // pure near-black
+          surface:  '#111111',   // card surface
+          elevated: '#1a1a1a',   // elevated element
+          border:   'rgba(255,255,255,0.08)',
+          muted:    'rgba(255,255,255,0.04)',
         },
-        neon: {
-          green:  '#00ff88',
-          pink:   '#ff2d78',
-          yellow: '#ffe600',
-          cyan:   '#00d4ff',
-          purple: '#9945ff',
-          orange: '#ff6b00',
+        // Purple/violet primary (bolt.new accent)
+        primary: {
+          50:  '#faf5ff',
+          100: '#f3e8ff',
+          200: '#e9d5ff',
+          300: '#d8b4fe',
+          400: '#c084fc',
+          500: '#a855f7',   // main purple
+          600: '#9333ea',
+          700: '#7c3aed',
+          800: '#6d28d9',
+          900: '#5b21b6',
         },
+        // Text palette
+        ink: {
+          primary:   '#ffffff',
+          secondary: '#a1a1aa',  // zinc-400
+          muted:     '#52525b',  // zinc-600
+          faint:     '#27272a',  // zinc-800
+        },
+        // Status colors
+        profit: '#22c55e',   // green
+        loss:   '#ef4444',   // red
+        warn:   '#f59e0b',   // amber
+        info:   '#06b6d4',   // cyan
       },
       fontFamily: {
-        meme:  ['Bangers', 'Impact', 'sans-serif'],   // heading — big & bold
-        body:  ['Space Grotesk', 'system-ui', 'sans-serif'],
-        mono:  ['JetBrains Mono', 'monospace'],
+        sans:    ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Inter', 'system-ui', 'sans-serif'],
+        mono:    ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
-      letterSpacing: {
-        meme: '0.05em',
+      fontSize: {
+        '2xs': ['0.625rem', { lineHeight: '1rem' }],
+      },
+      borderRadius: {
+        '4xl': '2rem',
       },
       animation: {
-        'rainbow':     'rainbow 4s linear infinite',
-        'wiggle':      'wiggle 0.5s ease-in-out infinite',
-        'float':       'float 3s ease-in-out infinite',
-        'neon-pulse':  'neon-pulse 2s ease-in-out infinite',
-        'slide-up':    'slide-up 0.4s ease-out',
-        'live-blink':  'live-blink 1s ease-in-out infinite',
-        'glitch':      'glitch 3s infinite',
-        'bounce-slow': 'bounce 2s infinite',
+        'glow-pulse':   'glow-pulse 3s ease-in-out infinite',
+        'fade-up':      'fade-up 0.4s ease-out',
+        'fade-in':      'fade-in 0.3s ease-out',
+        'live-blink':   'live-blink 1.5s ease-in-out infinite',
+        'float':        'float 4s ease-in-out infinite',
+        'shimmer':      'shimmer 2s linear infinite',
       },
       keyframes: {
-        rainbow: {
-          '0%':   { backgroundPosition: '0% 50%' },
-          '100%': { backgroundPosition: '200% 50%' },
+        'glow-pulse': {
+          '0%, 100%': { opacity: '0.6' },
+          '50%':       { opacity: '1' },
         },
-        wiggle: {
-          '0%,100%': { transform: 'rotate(-3deg)' },
-          '50%':     { transform: 'rotate(3deg)' },
-        },
-        float: {
-          '0%,100%': { transform: 'translateY(0)' },
-          '50%':     { transform: 'translateY(-8px)' },
-        },
-        'neon-pulse': {
-          '0%,100%': { opacity: '1',   textShadow: '0 0 10px currentColor, 0 0 20px currentColor' },
-          '50%':     { opacity: '0.7', textShadow: '0 0 5px currentColor' },
-        },
-        'slide-up': {
-          from: { opacity: '0', transform: 'translateY(20px)' },
+        'fade-up': {
+          from: { opacity: '0', transform: 'translateY(16px)' },
           to:   { opacity: '1', transform: 'translateY(0)' },
         },
-        'live-blink': {
-          '0%,100%': { opacity: '1' },
-          '50%':     { opacity: '0.2' },
+        'fade-in': {
+          from: { opacity: '0' },
+          to:   { opacity: '1' },
         },
-        glitch: {
-          '0%,90%,100%': { transform: 'translate(0)' },
-          '92%':          { transform: 'translate(-3px, 1px)' },
-          '94%':          { transform: 'translate(3px, -1px)' },
-          '96%':          { transform: 'translate(-1px, 2px)' },
+        'live-blink': {
+          '0%, 100%': { opacity: '1' },
+          '50%':       { opacity: '0.3' },
+        },
+        'float': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%':       { transform: 'translateY(-6px)' },
+        },
+        'shimmer': {
+          from: { backgroundPosition: '-200% center' },
+          to:   { backgroundPosition: '200% center' },
         },
       },
+      backgroundImage: {
+        // Bolt.new-style radial glow
+        'glow-purple': 'radial-gradient(ellipse 80% 50% at 50% -10%, rgba(139,92,246,0.25), transparent)',
+        'glow-center': 'radial-gradient(ellipse 60% 40% at 50% 50%, rgba(139,92,246,0.15), transparent)',
+        // Gradient text
+        'grad-primary': 'linear-gradient(135deg, #c084fc 0%, #818cf8 50%, #06b6d4 100%)',
+        'grad-gold':    'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+        // Grid pattern
+        'grid-faint':  'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)',
+      },
+      backgroundSize: {
+        'grid': '48px 48px',
+      },
       boxShadow: {
-        'neon-green':  '0 0 12px #00ff88, 0 0 30px rgba(0,255,136,0.3)',
-        'neon-pink':   '0 0 12px #ff2d78, 0 0 30px rgba(255,45,120,0.3)',
-        'neon-yellow': '0 0 12px #ffe600, 0 0 30px rgba(255,230,0,0.3)',
-        'neon-cyan':   '0 0 12px #00d4ff, 0 0 30px rgba(0,212,255,0.3)',
-        'neon-purple': '0 0 12px #9945ff, 0 0 30px rgba(153,69,255,0.3)',
-        'card':        '0 4px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)',
+        'glow-sm':  '0 0 12px rgba(139,92,246,0.25)',
+        'glow-md':  '0 0 24px rgba(139,92,246,0.30)',
+        'glow-lg':  '0 0 48px rgba(139,92,246,0.20)',
+        'card':     '0 1px 0 0 rgba(255,255,255,0.05), 0 4px 16px rgba(0,0,0,0.4)',
+        'card-hover': '0 1px 0 0 rgba(255,255,255,0.08), 0 8px 32px rgba(0,0,0,0.5)',
       },
     },
   },

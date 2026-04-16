@@ -5,41 +5,28 @@ import { useTranslation } from 'react-i18next'
 import { fundApi, FundStats } from '../../services/api'
 import { formatUSD } from '../../services/web3'
 
-const CARD_STYLES = [
-  { emoji: '💸', neon: '#9945ff', glow: 'rgba(153,69,255,0.2)' },
-  { emoji: '📊', neon: '#00d4ff', glow: 'rgba(0,212,255,0.2)'  },
-  { emoji: '📈', neon: '#00ff88', glow: 'rgba(0,255,136,0.2)'  },
-  { emoji: '🏦', neon: '#ffe600', glow: 'rgba(255,230,0,0.2)'  },
-  { emoji: '👥', neon: '#ff2d78', glow: 'rgba(255,45,120,0.2)' },
-  { emoji: '🤖', neon: '#ff6b00', glow: 'rgba(255,107,0,0.2)'  },
-]
-
-function StatCard({ labelKey, value, sub, trend, style: s, delay = 0 }: {
-  labelKey: string; value: string; sub?: string
-  trend?: 'up' | 'down' | 'neutral'; style: typeof CARD_STYLES[0]; delay?: number
+function StatCard({ labelKey, value, subKey, icon: Icon, trend, delay = 0 }: {
+  labelKey: string; value: string; subKey?: string
+  icon: React.ElementType; trend?: 'up' | 'down' | 'neutral'; delay?: number
 }) {
   const { t } = useTranslation()
   return (
-    <motion.div
-      className="rounded-2xl p-4 flex flex-col gap-1"
-      style={{ background: '#12122a', border: `2px solid ${s.neon}30`, boxShadow: `0 0 16px ${s.glow}` }}
-      initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay }}
-      whileHover={{ scale: 1.03, boxShadow: `0 0 28px ${s.glow}` }}
-    >
-      <div className="flex items-center justify-between mb-1">
-        <span className="text-xs font-body font-semibold uppercase tracking-widest" style={{ color: '#6666aa' }}>
-          {t(labelKey)}
-        </span>
-        <span className="text-lg">{s.emoji}</span>
+    <motion.div className="stat-card" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay, duration: 0.35 }}>
+      <div className="flex items-center justify-between mb-2">
+        <span className="stat-label">{t(labelKey)}</span>
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg"
+             style={{ background: 'rgba(139,92,246,0.12)', border: '1px solid rgba(139,92,246,0.2)' }}>
+          <Icon className="w-3.5 h-3.5 text-primary-400" />
+        </div>
       </div>
-      <div className="font-meme text-2xl text-white" style={{ letterSpacing: '0.03em' }}>{value}</div>
-      {sub && (
-        <div className={`text-xs font-body font-semibold flex items-center gap-1 ${
-          trend === 'up' ? 'text-neon-green' : trend === 'down' ? 'text-neon-pink' : ''
-        }`} style={ trend === 'neutral' ? { color: s.neon } : {} }>
+      <div className="stat-value">{value}</div>
+      {subKey && (
+        <div className={`mt-1 flex items-center gap-1 text-xs ${
+          trend === 'up' ? 'text-green-400' : trend === 'down' ? 'text-red-400' : 'text-ink-muted'
+        }`}>
           {trend === 'up'   && <TrendingUp  className="w-3 h-3" />}
           {trend === 'down' && <TrendingDown className="w-3 h-3" />}
-          {sub}
+          {t(subKey)}
         </div>
       )}
     </motion.div>
@@ -48,9 +35,9 @@ function StatCard({ labelKey, value, sub, trend, style: s, delay = 0 }: {
 
 function SkeletonCard() {
   return (
-    <div className="rounded-2xl p-4 animate-pulse" style={{ background: '#12122a', border: '2px solid #1e1e40' }}>
-      <div className="h-3 w-20 rounded mb-3" style={{ background: '#1e1e40' }} />
-      <div className="h-7 w-28 rounded"      style={{ background: '#1e1e40' }} />
+    <div className="stat-card animate-pulse">
+      <div className="mb-3 h-2.5 w-20 rounded-full" style={{ background: 'rgba(255,255,255,0.06)' }} />
+      <div className="h-6 w-28 rounded-lg"           style={{ background: 'rgba(255,255,255,0.06)' }} />
     </div>
   )
 }
@@ -59,7 +46,6 @@ export default function DataCards() {
   const { data: stats, isLoading } = useQuery<FundStats>({
     queryKey: ['fund-stats'], queryFn: fundApi.getStats, refetchInterval: 30_000,
   })
-  const { t } = useTranslation()
 
   if (isLoading) return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
@@ -70,20 +56,16 @@ export default function DataCards() {
   const pnl = stats?.total_profit_loss_usd ?? 0
   const pct = stats?.profit_loss_pct ?? 0
 
-  const cards = [
-    { labelKey: 'stats.total_invested',   value: `${(stats?.total_invested_bnb ?? 0).toFixed(2)} BNB` },
-    { labelKey: 'stats.portfolio_value',  value: formatUSD(stats?.total_portfolio_value_usd ?? 0) },
-    { labelKey: 'stats.profit_loss',      value: formatUSD(Math.abs(pnl)),   sub: `${pct >= 0 ? '+' : ''}${pct.toFixed(2)}%`, trend: (pnl >= 0 ? 'up' : 'down') as 'up' | 'down' },
-    { labelKey: 'stats.cash_available',   value: `${(stats?.cash_available_bnb ?? 0).toFixed(4)} BNB` },
-    { labelKey: 'stats.investors',        value: `${stats?.num_investors ?? 0} 🧑‍🚀` },
-    { labelKey: 'stats.strategy_manager', value: 'AI Sophia 🐱', sub: t('stats.live_trading'), trend: 'neutral' as 'neutral' },
-  ]
-
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-      {cards.map((c, i) => (
-        <StatCard key={i} {...c} style={CARD_STYLES[i]} delay={i * 0.05} />
-      ))}
+      <StatCard labelKey="stats.total_invested"   value={`${(stats?.total_invested_bnb ?? 0).toFixed(2)} BNB`} icon={Wallet}     delay={0}    />
+      <StatCard labelKey="stats.portfolio_value"  value={formatUSD(stats?.total_portfolio_value_usd ?? 0)}     icon={BarChart3}  delay={0.05} />
+      <StatCard labelKey="stats.profit_loss"      value={formatUSD(Math.abs(pnl))}
+                subKey={undefined} trend={pnl >= 0 ? 'up' : 'down'}
+                icon={pnl >= 0 ? TrendingUp : TrendingDown}                                                                      delay={0.1}  />
+      <StatCard labelKey="stats.cash_available"   value={`${(stats?.cash_available_bnb ?? 0).toFixed(4)} BNB`} icon={DollarSign} delay={0.15} />
+      <StatCard labelKey="stats.investors"        value={`${stats?.num_investors ?? 0}`}                        icon={Users}      delay={0.2}  />
+      <StatCard labelKey="stats.strategy_manager" value="AI Sophia" subKey="stats.live_trading" trend="neutral" icon={TrendingUp} delay={0.25} />
     </div>
   )
 }

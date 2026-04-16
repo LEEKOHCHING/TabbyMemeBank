@@ -1,20 +1,20 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
-import { TrendingUp, TrendingDown, Minus, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react'
+import { FileText, TrendingUp, TrendingDown, Minus, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react'
 import { sophiaApi, Report, ReportDetail } from '../services/api'
 
-const REC: Record<string, { badge: string; neon: string; icon: React.ElementType; label: string; emoji: string }> = {
-  BUY:   { badge: 'badge-green',  neon: '#00ff88', icon: TrendingUp,   label: 'BUY 🚀',  emoji: '🟢' },
-  SELL:  { badge: 'badge-pink',   neon: '#ff2d78', icon: TrendingDown,  label: 'SELL 📉', emoji: '🔴' },
-  HOLD:  { badge: 'badge-yellow', neon: '#ffe600', icon: Minus,         label: 'HOLD 💎', emoji: '🟡' },
-  WATCH: { badge: 'badge-purple', neon: '#9945ff', icon: AlertTriangle, label: 'WATCH 👀', emoji: '🟣' },
+const REC: Record<string, { badge: string; color: string; icon: React.ElementType; label: string }> = {
+  BUY:   { badge: 'badge-green',  color: '#4ade80', icon: TrendingUp,   label: '建议买入' },
+  SELL:  { badge: 'badge-red',    color: '#f87171', icon: TrendingDown,  label: '建议卖出' },
+  HOLD:  { badge: 'badge-amber',  color: '#fbbf24', icon: Minus,         label: '建议持有' },
+  WATCH: { badge: 'badge-purple', color: '#c084fc', icon: AlertTriangle, label: '观望'     },
 }
-const RISK: Record<string, string> = { LOW: 'badge-green', MEDIUM: 'badge-yellow', HIGH: 'badge-pink' }
+const RISK: Record<string, string> = { LOW: 'badge-green', MEDIUM: 'badge-amber', HIGH: 'badge-red' }
 
-function ReportCard({ report, i }: { report: Report; i: number }) {
-  const [open, setOpen]       = useState(false)
-  const [detail, setDetail]   = useState<ReportDetail | null>(null)
+function ReportCard({ report }: { report: Report }) {
+  const [open, setOpen] = useState(false)
+  const [detail, setDetail] = useState<ReportDetail | null>(null)
   const rec = REC[report.recommendation ?? 'WATCH'] ?? REC.WATCH
   const RecIcon = rec.icon
 
@@ -24,47 +24,34 @@ function ReportCard({ report, i }: { report: Report; i: number }) {
   }
 
   return (
-    <motion.div
-      className="rounded-2xl p-5"
-      style={{ background: '#12122a', border: `2px solid ${rec.neon}25`, boxShadow: `0 0 16px ${rec.neon}10` }}
-      layout
-      initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-      whileHover={{ scale: 1.01, boxShadow: `0 0 24px ${rec.neon}25` }}
-    >
+    <motion.div className="card-hover" layout initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex-1">
           <div className="flex flex-wrap gap-1.5 mb-2">
-            {report.token_symbol && (
-              <span className="badge-purple font-body font-bold">${report.token_symbol}</span>
-            )}
-            <span className={`badge ${rec.badge} font-body`}>
+            {report.token_symbol && <span className="badge-purple">${report.token_symbol}</span>}
+            <span className={rec.badge + ' badge'}>
               <RecIcon className="w-3 h-3" /> {rec.label}
             </span>
             {report.risk_level && (
-              <span className={`badge ${RISK[report.risk_level]} font-body`}>
-                ⚠️ {report.risk_level}
-              </span>
+              <span className={RISK[report.risk_level] + ' badge'}>风险 {report.risk_level}</span>
             )}
             {report.confidence_score != null && (
-              <span className="badge badge-cyan font-body">🎯 {report.confidence_score}%</span>
+              <span className="badge-cyan">置信度 {report.confidence_score}%</span>
             )}
           </div>
-          <h3 className="font-meme text-lg text-white tracking-wide">{report.title}</h3>
+          <h3 className="text-sm font-semibold text-white">{report.title}</h3>
         </div>
-        <span className="text-xs font-body shrink-0" style={{ color: '#6666aa' }}>
-          {new Date(report.published_at).toLocaleDateString()}
+        <span className="text-2xs text-ink-muted shrink-0">
+          {new Date(report.published_at).toLocaleDateString('zh-CN')}
         </span>
       </div>
 
-      <p className="text-sm font-body leading-relaxed mb-4" style={{ color: '#8888aa' }}>{report.summary}</p>
+      <p className="text-xs text-ink-secondary leading-relaxed mb-3">{report.summary}</p>
 
       <button onClick={toggle}
-        className="flex items-center gap-1.5 text-xs font-body font-semibold transition-colors"
-        style={{ color: rec.neon }}
-        onMouseEnter={e => (e.currentTarget.style.opacity = '0.75')}
-        onMouseLeave={e => (e.currentTarget.style.opacity = '1')}>
+        className="flex items-center gap-1 text-xs text-primary-400 hover:text-primary-300 transition-colors">
         {open ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-        {open ? '▲ Collapse Report' : '▼ Read Full Report'}
+        {open ? '收起报告' : '查看完整报告'}
       </button>
 
       <AnimatePresence>
@@ -73,9 +60,9 @@ function ReportCard({ report, i }: { report: Report; i: number }) {
             initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }} className="overflow-hidden"
           >
-            <div className="mt-4 pt-4" style={{ borderTop: `1px solid ${rec.neon}20` }}>
-              <pre className="whitespace-pre-wrap text-xs font-body leading-relaxed rounded-xl p-4"
-                   style={{ background: 'rgba(0,0,0,0.4)', color: '#c8c8e8', border: '1px solid #1e1e40' }}>
+            <div className="mt-4 pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+              <pre className="whitespace-pre-wrap text-xs text-ink-secondary leading-relaxed font-mono rounded-lg p-4"
+                   style={{ background: 'rgba(0,0,0,0.3)' }}>
                 {detail.full_report}
               </pre>
             </div>
@@ -95,38 +82,41 @@ export default function ResearchPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-10">
-
-      {/* Header */}
-      <motion.div className="flex items-center gap-4 mb-8" initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}>
-        <div className="sophia-avatar w-12 h-12 text-2xl animate-float">📊</div>
-        <div>
-          <h1 className="font-meme text-4xl text-white tracking-wide" style={{ letterSpacing: '0.05em' }}>
-            RESEARCH <span className="text-neon-cyan">REPORTS</span>
-          </h1>
-          <p className="text-sm font-body mt-1" style={{ color: '#6666aa' }}>
-            🤖 AI Sophia's deep-dive Meme token analysis
-          </p>
-        </div>
-      </motion.div>
-
+      <PageHeader icon={FileText} title="投研报告" sub="由 Sophia 行长发布的 Meme 代币深度分析" />
       {isLoading ? (
-        <div className="space-y-4">
-          {[1,2,3].map(i => (
-            <div key={i} className="rounded-2xl p-5 animate-pulse" style={{ background: '#12122a', border: '2px solid #1e1e40', height: '7rem' }} />
-          ))}
+        <div className="space-y-3">
+          {[1,2,3].map(i => <div key={i} className="card animate-pulse h-28" />)}
         </div>
       ) : reports.length === 0 ? (
-        <div className="rounded-2xl p-16 flex flex-col items-center gap-4"
-             style={{ background: '#12122a', border: '2px solid rgba(153,69,255,0.2)' }}>
-          <span className="text-5xl">📝</span>
-          <p className="font-meme text-xl text-white">SOPHIA IS WRITING...</p>
-          <p className="text-sm font-body" style={{ color: '#6666aa' }}>First research report coming soon 🐱</p>
-        </div>
+        <Empty icon={FileText} msg="Sophia 行长正在撰写第一份投研报告…" />
       ) : (
-        <div className="space-y-4">
-          {reports.map((r, i) => <ReportCard key={r.id} report={r} i={i} />)}
+        <div className="space-y-3">
+          {reports.map(r => <ReportCard key={r.id} report={r} />)}
         </div>
       )}
+    </div>
+  )
+}
+
+function PageHeader({ icon: Icon, title, sub }: { icon: React.ElementType; title: string; sub: string }) {
+  return (
+    <motion.div className="flex items-center gap-3 mb-8" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      <div className="sophia-avatar w-9 h-9 text-sm">
+        <Icon className="w-4 h-4" />
+      </div>
+      <div>
+        <h1 className="text-lg font-bold text-white">{title}</h1>
+        <p className="text-xs text-ink-muted">{sub}</p>
+      </div>
+    </motion.div>
+  )
+}
+
+function Empty({ icon: Icon, msg }: { icon: React.ElementType; msg: string }) {
+  return (
+    <div className="card flex flex-col items-center py-16 gap-3">
+      <Icon className="w-10 h-10 text-ink-muted" />
+      <p className="text-sm text-ink-muted">{msg}</p>
     </div>
   )
 }
